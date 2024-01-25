@@ -1,0 +1,67 @@
+<div class="p-5 rounded-md max-w-md">
+  @if (!isLoading) {
+    <form [formGroup]="supplierForm">
+      <div class="flex items-center">
+        <span class="block text-lg font-semibold">Supplier Details</span>
+
+        <button class="rounded-full p-1 hover:bg-gray-200 ml-auto" mat-dialog-close>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="tooltip tooltip-bottom w-full mt-5" data-tip="Name">
+        <input
+          type="text"
+          placeholder="Supplier Name"
+          class="input input-bordered w-full {{isValid.name? '' : 'text-error bg-error bg-opacity-5'}}"
+          formControlName="name"
+        />
+      </div>
+
+      <div class="tooltip tooltip-bottom w-full" data-tip="Contact No">
+        <input
+          type="text"
+          placeholder="Contact No"
+          class="input input-bordered w-full mt-3 {{isValid.contactNo ? '' : 'text-error bg-error bg-opacity-5'}}"
+          formControlName="contactNo"
+        />
+      </div>
+
+      <div class="tooltip tooltip-bottom w-full" data-tip="Address">
+    <textarea
+      class="textarea textarea-bordered w-full h-32 mt-3 {{isValid.address ? '' : 'text-error bg-error bg-opacity-5'}}"
+      placeholder="Address"
+      formControlName="address"
+    >
+    </textarea>
+      </div>
+
+      <div class="flex flex-row mt-3 max-w-[99%]">
+        <button
+          data-theme="dark"
+          class="btn text-white mr-2 w-1/2"
+          (click)="showConfirmationDialog()">
+
+          Submit
+        </button>
+
+        <button class="btn w-1/2" (click)="clearForm()">Clear Form</button>
+      </div>
+    </form>
+
+  } @else {
+    <div class="flex items-center">
+      <span class="loading loading-spinner loading-md text-gray-400 mr-3"></span>
+      <span>Loading</span>
+    </div>
+  }
+</div>

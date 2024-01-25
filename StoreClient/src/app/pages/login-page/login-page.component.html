@@ -1,0 +1,84 @@
+<div class="w-full min-h-screen flex justify-center items-center bg-black bg-opacity-5" >
+  <div data-theme="light" class="max-w-sm shadow-lg rounded-md px-5 pb-5 text-center bg-white">
+    <div class="flex items-center w-full justify-center my-8">
+      <img class="w-36 h-36 -ml-6" ngSrc="../../../assets/logo.png" sizes="" alt="logo" width="150" height="150" priority="high">
+
+      <div>
+        <span class="text-[2.6em] text-brown font-bold">StoreApp</span>
+        <span class="block text-left ml-1 -mt-2 font-semibold">Admin Panel</span>
+      </div>
+    </div>
+
+    <div class="flex my-5 w-full justify-center items-center">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="w-5 h-5 mr-2">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+        />
+      </svg>
+
+      <span class="font-medium text-md">
+        Log in to manage your store
+      </span>
+    </div>
+
+    <form [formGroup]="loginForm">
+      <input
+        type="text" placeholder="Username"
+        class="input input-bordered w-full rounded-md rounded-b-none border-b-0 focus:outline-0 {{!isUsernameValid? 'bg-red-100 placeholder-red-600 text-red-600' : null}}"
+        formControlName="username"
+      />
+
+      <input
+        type="password" placeholder="Password"
+        class="input input-bordered w-full rounded-md rounded-t-none focus:outline-0 {{!isPasswordValid? 'bg-red-100 placeholder-red-600 text-red-600' : null}}"
+        formControlName="password"
+      />
+
+      <button class="btn w-full mt-3.5 rounded-md" (click)="onSubmit()" [disabled]="isLoading">
+        @if (isLoading) {
+          <span class="loading loading-dots loading-md"></span>
+        } @else {
+          <span>Log in</span>
+        }
+      </button>
+    </form>
+
+    @if (isFailed) {
+      <div class="flex w-full items-center justify-center mt-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-5 h-5 ml-2 text-red-600 mr-2">
+
+          <path stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+          />
+        </svg>
+        <span class="text-error">{{error}}</span>
+      </div>
+    }
+
+    <div class="form-control flex-row mt-2">
+      <label class="label cursor-pointer w-1/2">
+        <input type="checkbox" checked="checked" class="checkbox checkbox-xs"/>
+        <span class="label-text mr-auto ml-2">Remember me</span>
+      </label>
+
+      <label class="label cursor-pointer w-1/2">
+        <span class="label-text ml-auto">Forgot password?</span>
+      </label>
+    </div>
+  </div>
+</div>

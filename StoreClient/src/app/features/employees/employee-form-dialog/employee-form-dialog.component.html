@@ -1,0 +1,209 @@
+<div class="p-5 rounded-md min-w-fit">
+  @if (!isLoading) {
+    <form [formGroup]="employeeForm" class="flex flex-row">
+      <div class="max-w-md">
+        <span class="block text-lg font-semibold mb-5">Personal Info</span>
+
+        <div class="flex flex-row items-center">
+          <div class="rounded-full ring ring-gray-300 ring-offset-base-100 ring-offset-2 mr-5">
+            <div class="mask mask-circle w-32 h-32">
+              <img
+                src="{{employeeImage ? employeeImage : 'assets/default-profile-image.png'}}"
+                alt="user-image"
+              />
+            </div>
+          </div>
+
+          <input
+            type="file"
+            accept="image/*"
+            class="file-input file-input-bordered w-full max-w-xs"
+            (change)="setEmployeeImagePreview($event)"
+          />
+        </div>
+
+        <div class="flex flex-row mt-5">
+          <div class="tooltip tooltip-bottom w-full mr-2" data-tip="First Name">
+            <input
+              type="text"
+              placeholder="First Name"
+              class="input input-bordered w-full max-w-xs {{isValid.firstName ? '' : 'text-error bg-error bg-opacity-5'}}"
+              formControlName="firstName"
+            />
+          </div>
+
+          <div class="tooltip tooltip-bottom w-full" data-tip="Last Name">
+            <input
+              type="text"
+              placeholder="Last Name"
+              class="input input-bordered w-full max-w-xs {{isValid.lastName ? '' : 'text-error bg-error bg-opacity-5'}}"
+              formControlName="lastName"
+            />
+          </div>
+        </div>
+
+        <div class="tooltip tooltip-bottom w-full" data-tip="NIC">
+          <input
+            type="text"
+            placeholder="NIC"
+            class="input input-bordered w-full mt-3 {{isValid.nic ? '' : 'text-error bg-error bg-opacity-5'}}"
+            formControlName="nic"
+          />
+        </div>
+
+        <div class="flex flex-row mt-3">
+          <div class="tooltip tooltip-bottom mr-2 w-full" data-tip="Birth Date">
+            <input
+              type="text"
+              placeholder="Birth Date"
+              class="input input-bordered w-full {{isValid.doBirth ? '' : 'text-error bg-error bg-opacity-5'}}"
+              formControlName="doBirth"
+              onfocus="(this.type='date')"
+            />
+          </div>
+
+          <select
+            class="select select-bordered w-fit {{isValid.gender ? '' : 'text-error bg-error bg-opacity-5'}}"
+            formControlName="gender"
+          >
+            <option disabled value="default">Gender</option>
+
+            @for (gender of genderList; track genderList) {
+              <option value="{{gender.id}}">{{gender.name}}</option>
+            }
+          </select>
+        </div>
+
+        <div class="tooltip tooltip-bottom w-full" data-tip="Address">
+        <textarea
+          class="textarea textarea-bordered w-full h-32 mt-3 {{isValid.address ? '' : 'text-error bg-error bg-opacity-5'}}"
+          placeholder="Address"
+          formControlName="address"
+        >
+      </textarea>
+        </div>
+
+        <div class="flex flex-row mt-3 max-w-[99%]">
+          <button
+            data-theme="dark"
+            class="btn text-white mr-2 w-1/2"
+            (click)="showConfirmationDialog()">
+
+            Submit
+          </button>
+
+          <button class="btn w-1/2" (click)="clearForm()">Clear Form</button>
+        </div>
+      </div>
+
+      <div class="divider divider-horizontal mx-5 opacity-50 py-5"></div>
+
+      <div class="max-w-md">
+        <div class="flex items-center">
+          <span class="block text-lg font-semibold">Contact Info</span>
+
+          <button class="rounded-full p-1 hover:bg-gray-200 ml-auto" mat-dialog-close>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-6 h-6"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="flex flex-row">
+          <div class="w-full tooltip tooltip-bottom mr-2" data-tip="Mobile">
+            <input
+              type="text"
+              placeholder="Mobile"
+              class="input input-bordered w-full mt-4 {{isValid.mobile ? '' : 'text-error bg-error bg-opacity-5'}}"
+              formControlName="mobile"
+            />
+          </div>
+
+          <div class="w-full tooltip tooltip-bottom" data-tip="Land Number">
+            <input
+              type="text"
+              placeholder="Land"
+              class="input input-bordered w-full mt-4 {{isValid.land ? '' : 'text-error bg-error bg-opacity-5'}}"
+              formControlName="land"
+            />
+          </div>
+        </div>
+
+        <span class="block text-lg font-semibold mt-5">Employee Info</span>
+
+        <div class="flex flex-row items-center mt-3">
+          <div class="tooltip tooltip-bottom mr-2 w-full" data-tip="EmpNo">
+            <input
+              type="text"
+              placeholder="EmpNo"
+              class="input input-bordered w-full {{isValid.empNo ? '' : 'text-error bg-error bg-opacity-5'}}"
+              formControlName="empNo"
+            />
+          </div>
+
+          <button class="btn" (click)="generateEmpNo()">Generate Random</button>
+        </div>
+
+        <div class="flex flex-row mt-3">
+          <div class="w-full tooltip tooltip-bottom mr-2" data-tip="Date Assigned">
+            <input
+              type="text"
+              placeholder="Assigned Date"
+              class="input input-bordered w-full {{isValid.doAssigned ? '' : 'text-error bg-error bg-opacity-5'}}"
+              onfocus="(this.type='date')"
+              formControlName="doAssigned"
+            />
+          </div>
+
+          <div class="w-fit tooltip tooltip-bottom mr-2" data-tip="Designation">
+            <select
+              class="select select-bordered w-fit {{isValid.designation ? '' : 'text-error bg-error bg-opacity-5'}}"
+              formControlName="designation"
+            >
+              <option disabled value="default">Designation</option>
+
+              @for (designation of designationList; track designationList) {
+                <option value="{{designation.id}}">{{designation.name}}</option>
+              }
+            </select>
+          </div>
+
+          <div class="tooltip tooltip-bottom w-fit" data-tip="Employee Status">
+            <select
+              class="select select-bordered w-fit {{isValid.empStatus ? '' : 'text-error bg-error bg-opacity-5'}}"
+              formControlName="empStatus"
+            >
+              <option disabled value="default">Status</option>
+
+              @for (employeeStatus of employeeStatusList; track employeeStatusList) {
+                <option value="{{employeeStatus.id}}">{{employeeStatus.name}}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <span class="block text-lg font-semibold mt-5">Description</span>
+
+        <textarea
+          class="textarea textarea-bordered w-full h-36 mt-3 {{isValid.description ? '' : 'text-error bg-error bg-opacity-5'}}"
+          placeholder="Description"
+          formControlName="description"
+        >
+      </textarea>
+      </div>
+    </form>
+
+  } @else {
+    <div class="flex items-center">
+      <span class="loading loading-spinner loading-md text-gray-400 mr-3"></span>
+      <span>Loading</span>
+    </div>
+  }
+</div>

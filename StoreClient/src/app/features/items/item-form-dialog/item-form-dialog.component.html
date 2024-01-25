@@ -1,0 +1,66 @@
+<div class="py-6 px-5 rounded-md max-w-md">
+  @if (!isLoading) {
+    <form [formGroup]="itemForm">
+      <div class="flex items-center">
+        <span class="block text-lg font-semibold">Item Details</span>
+
+        <button class="rounded-full p-1 hover:bg-gray-200 ml-auto" mat-dialog-close>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="tooltip tooltip-bottom w-full mt-4" data-tip="Item Name">
+        <input
+          type="text"
+          placeholder="Item Name"
+          class="input input-bordered w-full"
+          formControlName="name"
+        />
+      </div>
+
+      <div class="flex items-center mt-3">
+        <div class="tooltip tooltip-bottom w-full mr-2" data-tip="Purchase Price">
+          <input
+            type="number"
+            placeholder="Purchase Price"
+            class="input input-bordered w-full"
+            formControlName="purchasePrice"
+          />
+        </div>
+
+        <div class="tooltip tooltip-bottom w-full" data-tip="Sale Price">
+          <input
+            type="number"
+            placeholder="Sale Price"
+            class="input input-bordered w-full"
+            formControlName="salePrice"
+          />
+        </div>
+      </div>
+
+      <button
+        data-theme="dark"
+        class="btn w-full mt-5 text-white"
+        (click)="showConfirmationDialog()"
+      >
+        Submit
+      </button>
+    </form>
+
+  } @else {
+    <div class="flex items-center">
+      <span class="loading loading-spinner loading-md text-gray-400 mr-3"></span>
+      <span>Loading</span>
+    </div>
+  }
+</div>
+

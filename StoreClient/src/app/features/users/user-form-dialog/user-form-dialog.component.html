@@ -1,0 +1,136 @@
+<div class="py-6 px-5 rounded-md max-w-md">
+  @if (!isLoading) {
+    <form [formGroup]="userForm">
+      <div class="flex items-center">
+        <span class="block text-lg font-semibold">User Account</span>
+
+        <button class="rounded-full p-1 hover:bg-gray-200 ml-auto" mat-dialog-close>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <input
+        type="text"
+        placeholder="Username"
+        class="input input-bordered w-full mt-4"
+        formControlName="username"
+      />
+
+      <input
+        type="password"
+        placeholder="Password"
+        class="input input-bordered w-full mt-3"
+        formControlName="password"
+      />
+
+      <div class="w-full flex mt-3 items-center">
+        <input
+          type="text"
+          placeholder="EmpNo"
+          class="input input-bordered w-full mr-2"
+          formControlName="empNo"
+        />
+
+        <select class="select select-bordered" formControlName="userStatus">
+          <option disabled value="default">User Status</option>
+
+          @for (status of userStatusList; track userStatusList) {
+            <option value="{{status.id}}">{{status.name}}</option>
+          }
+        </select>
+      </div>
+
+      <span class="block text-lg font-semibold mt-5">Authorities</span>
+
+      <form [formGroup]="roleForm" class="flex mt-3 mb-2 items-center">
+        <select class="select select-bordered w-full mr-2" formControlName="role">
+          <option disabled value="default">Role</option>
+
+          @for (role of roleList; track roleList) {
+            <option value="{{role.id}}">{{role.name}}</option>
+          }
+        </select>
+
+        <button class="btn" (click)="addRoleToList()">Add</button>
+      </form>
+
+      <div>
+        @for (role of userRoleList; track userRoleList) {
+          <div class="badge badge-outline mr-1 pr-0 text-success">
+            {{role.name}}
+
+            <button class="rounded-full p-0.5 bg-success bg-opacity-10 ml-1.5" (click)="removeFromRoleList(role.id)">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-3.5 h-3.5"
+              >
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        }
+      </div>
+
+      <!--    <div class="flex flex-row mt-6 items-center">-->
+      <!--      <span class="block text-lg font-semibold">Create Role</span>-->
+      <!--      <input type="checkbox" class="toggle ml-auto" (click)="toggleCustomRoleForm()"/>-->
+      <!--    </div>-->
+
+      <!--    <form [formGroup]="newRoleForm">-->
+      <!--      <input-->
+      <!--        type="text"-->
+      <!--        placeholder="Role Name"-->
+      <!--        class="input input-bordered w-full mt-3"-->
+      <!--        formControlName="roleName"-->
+      <!--      />-->
+
+      <!--      <div class="flex flex-row items-center mt-3">-->
+      <!--        <select class="select select-bordered w-full mr-2" formControlName="module" >-->
+      <!--          <option disabled value="default">Module</option>-->
+
+      <!--          @for (module of moduleList; track moduleList) {-->
+      <!--            <option value="{{module.id}}">{{module.name}}</option>-->
+      <!--          }-->
+      <!--        </select>-->
+
+      <!--        <select class="select select-bordered w-full mr-2" formControlName="operation">-->
+      <!--          <option disabled value="default">Operation</option>-->
+
+      <!--          @for (operation of operationList; track operationList) {-->
+      <!--            <option value="{{operation.id}}">{{operation.name}}</option>-->
+      <!--          }-->
+      <!--        </select>-->
+
+      <!--        <button class="btn" [disabled]="!isNewRoleFormEnabled">Add</button>-->
+      <!--      </div>-->
+      <!--    </form>-->
+
+      <button
+        data-theme="dark"
+        class="btn w-full mt-5 text-white"
+        (click)="showConfirmationDialog()"
+      >
+        Submit
+      </button>
+    </form>
+
+  } @else {
+    <div class="flex items-center">
+      <span class="loading loading-spinner loading-md text-gray-400 mr-3"></span>
+      <span>Loading</span>
+    </div>
+  }
+</div>
