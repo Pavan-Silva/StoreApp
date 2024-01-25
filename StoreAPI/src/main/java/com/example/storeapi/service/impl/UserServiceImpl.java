@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -69,10 +70,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(UserDto userDto) {
-        if (userRepository.existsById(userDto.getId())) {
+        Optional<User> userOpt = userRepository.findById(userDto.getId());
 
+        if (userOpt.isPresent()) {
             User user = ObjectMapper.Map.dtoToUser(userDto);
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setDoCreated(userOpt.get().getDoCreated());
+            user.setToCreated(userOpt.get().getToCreated());
             return ObjectMapper.Map.userToDto(userRepository.save(user));
 
         } else throw new ResourceNotFoundException("User does not exists for given Id");

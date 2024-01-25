@@ -33,7 +33,9 @@
 
             <td class="w-72">
               @for (role of user.roles; track role) {
-                <span>{{role.name}} </span>
+                <span class="badge text-success border-success mr-1">
+                  {{role.name.charAt(0) + role.name.slice(1).toLowerCase()}}
+                </span>
               }
 
               <span class="block mt-1 badge pb-5 badge-ghost badge-sm">Acc Created on {{user.doCreated}} - {{user.toCreated}}</span>

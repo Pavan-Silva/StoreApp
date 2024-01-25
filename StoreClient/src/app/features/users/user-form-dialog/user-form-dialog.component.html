@@ -1,4 +1,4 @@
-<div class="py-6 px-5 rounded-md max-w-md">
+<div class="py-6 px-5 rounded-md min-w-fit max-w-md">
   @if (!isLoading) {
     <form [formGroup]="userForm">
       <div class="flex items-center">
@@ -65,8 +65,8 @@
 
       <div>
         @for (role of userRoleList; track userRoleList) {
-          <div class="badge badge-outline mr-1 pr-0 text-success">
-            {{role.name}}
+          <div class="badge badge-outline mr-1 py-3 pr-0 text-success">
+            {{role.name.charAt(0) + role.name.slice(1).toLowerCase()}}
 
             <button class="rounded-full p-0.5 bg-success bg-opacity-10 ml-1.5" (click)="removeFromRoleList(role.id)">
               <svg
@@ -94,6 +94,9 @@
     </form>
 
   } @else {
-    <app-loading/>
+    <div class="flex items-center">
+      <span class="loading loading-spinner loading-md text-gray-400 mr-3"></span>
+      <span>Loading</span>
+    </div>
   }
 </div>

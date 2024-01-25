@@ -95,7 +95,10 @@ export class UserTableComponent implements OnInit {
   }
 
   showEditDialog(user:user) {
-    this.dialog.open(UserFormDialogComponent, {data:user.id});
+    this.dialog.open(UserFormDialogComponent, {data:user.id})
+      .afterClosed().subscribe((res:boolean) => {
+        if (res) this.refreshUserList();
+    });
   }
 
   deleteUser(user:user) {
