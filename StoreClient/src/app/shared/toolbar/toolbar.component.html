@@ -1,6 +1,6 @@
 <div class="m-3 w-auto navbar bg-white shadow-sm rounded-lg">
   @if (isInSearch) {
-    <button class="btn btn-ghost border-gray-400 border-opacity-50 mr-3" (click)="navigateToMainPage()">
+    <button class="btn btn-ghost border-gray-400 border-opacity-50 mr-1 scale-90" (click)="navigateToMainPage()">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -38,14 +38,19 @@
       Add
     </button>
 
-    <div class="join ml-auto mr-5">
+    <div class="join ml-auto mr-3 scale-95">
       <input class="input input-md input-bordered join-item" placeholder="Search" #txtSearch/>
 
       <select class="select select-bordered join-item" #txtFilter>
+        <option value="name">Name</option>
+
         @if (currentModule === 'Employees') {
           <option value="empno">EmpNo</option>
-          <option value="name">Name</option>
           <option value="nic">Nic</option>
+        }
+
+        @if (currentModule === 'Orders') {
+          <option value="price">Supplier</option>
         }
       </select>
 
@@ -67,27 +72,14 @@
     </div>
   }
 
-  <div class="indicator mr-8 cursor-pointer mt-2 {{currentModule === 'Dashboard'? 'ml-auto' : ''}}">
-    <span class="indicator-item badge badge-error text-white px-1.5 -mt-0.5 bg-opacity-90">9</span>
-
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke-width="1.5"
-      stroke="currentColor"
-      class="w-6 h-6"
-    >
-      <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0M3.124 7.5A8.969 8.969 0 0 1 5.292 3m13.416 0a8.969 8.969 0 0 1 2.168 4.5"
-      />
-    </svg>
-  </div>
-
-  <div class="dropdown dropdown-end">
+  <div class="dropdown dropdown-end {{currentModule === 'Dashboard'? 'ml-auto' : ''}}">
     <div tabindex="0" role="button" class="flex items-center">
+      <div class="avatar mr-2">
+        <div class="w-10 rounded-full">
+          <img src="data:image/jpeg;base64,{{user.employee.photo}}" alt="user-profile-img"/>
+        </div>
+      </div>
+
       <div>
         <span class="mr-1.5 flex items-center text-gray-600 font-semibold text-sm">
         {{user.username.charAt(0).toUpperCase() + user.username.slice(1)}}
@@ -108,12 +100,6 @@
         </span>
 
         <span class="block text-xs -mt-1 text-gray-400">{{userRole}}</span>
-      </div>
-
-      <div class="avatar online mr-2">
-        <div class="w-10 rounded-full">
-          <img src="data:image/jpeg;base64,{{user.employee.photo}}" alt="user-profile-img"/>
-        </div>
       </div>
     </div>
 
