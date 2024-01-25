@@ -8,11 +8,16 @@ import {ItemFormDialogComponent} from "../item-form-dialog/item-form-dialog.comp
 import {NotificationSnackBarComponent} from "../../../shared/notification-snack-bar/notification-snack-bar.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute} from "@angular/router";
+import {LoadingComponent} from "../../../shared/loading/loading.component";
+import {ErrorComponent} from "../../../shared/error/error.component";
 
 @Component({
   selector: 'app-items',
   standalone: true,
-  imports: [],
+  imports: [
+    LoadingComponent,
+    ErrorComponent
+  ],
   templateUrl: './item-table.component.html'
 })
 export class ItemTableComponent implements OnInit {
@@ -52,7 +57,6 @@ export class ItemTableComponent implements OnInit {
       else this.refreshItemList();
     });
   }
-
 
   refreshItemList(){
     this.itemService.getAllItems().subscribe({
@@ -121,9 +125,5 @@ export class ItemTableComponent implements OnInit {
       horizontalPosition: "right",
       data: status
     });
-  }
-
-  scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

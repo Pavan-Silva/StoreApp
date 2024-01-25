@@ -16,6 +16,10 @@ export class SupplierService {
     return this.http.get<supplier[]>(API_URL);
   }
 
+  searchSuppliers(query:string, param:string) {
+    return this.http.get<supplier[]>(API_URL, {params:{name:query}});
+  }
+
   getSupplierById(id:number) {
     return this.http.get<supplier>(API_URL + '/' + id);
   }

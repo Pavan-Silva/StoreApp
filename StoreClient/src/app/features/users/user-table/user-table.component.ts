@@ -8,6 +8,9 @@ import {UserFormDialogComponent} from "../user-form-dialog/user-form-dialog.comp
 import {MatDialog} from "@angular/material/dialog";
 import {NotificationSnackBarComponent} from "../../../shared/notification-snack-bar/notification-snack-bar.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {ErrorComponent} from "../../../shared/error/error.component";
+import {LoadingComponent} from "../../../shared/loading/loading.component";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-users',
@@ -15,7 +18,9 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   imports: [
     ConfirmDialogComponent,
     EmployeeFormDialogComponent,
-    UserFormDialogComponent
+    UserFormDialogComponent,
+    ErrorComponent,
+    LoadingComponent
   ],
   templateUrl: './user-table.component.html'
 })
@@ -29,11 +34,15 @@ export class UserTableComponent implements OnInit {
   isFailed = false;
   isLoading = false;
 
+  currentSearchQuery = '';
+  currentSearchParam = '';
+
   constructor(
     private userService:UserService,
     private authorizationService:AuthorizationService,
     private dialog:MatDialog,
-    private snackBar:MatSnackBar
+    private snackBar:MatSnackBar,
+    private route:ActivatedRoute
   ) { }
 
   ngOnInit(): void {
@@ -42,17 +51,14 @@ export class UserTableComponent implements OnInit {
     this.hasUpdateAuthority = this.authorizationService.hasAuthority('Users-Update');
     this.hasDeleteAuthority = this.authorizationService.hasAuthority('Users-Delete');
 
-    this.userService.getAllUsers().subscribe({
-      next: data => {
-        this.users = data;
-        this.isFailed = false;
-        this.isLoading = false
-      },
-
-      error: () => {
-        this.isFailed = true;
-        this.isLoading =false;
+    this.route.queryParams.subscribe((params:any) =>{
+      if (params.query && params.filter) {
+        this.currentSearchParam = params.filter;
+        this.currentSearchQuery = params.query;
+        this.searchUsersWithCurrentQuery();
       }
+
+      else this.refreshUserList();
     });
   }
 
@@ -61,10 +67,29 @@ export class UserTableComponent implements OnInit {
       next: data => {
         this.users = data;
         this.isFailed = false;
+        this.isLoading = false;
       },
 
       error: () => {
         this.isFailed = true;
+        this.isLoading = false;
+      }
+    });
+  }
+
+  searchUsersWithCurrentQuery() {
+    this.isLoading = true;
+
+    this.userService.searchUsers(this.currentSearchQuery, this.currentSearchParam).subscribe({
+      next: data => {
+        this.users = data;
+        this.isFailed = false;
+        this.isLoading = false;
+      },
+
+      error: () => {
+        this.isFailed = true;
+        this.isLoading = false;
       }
     });
   }
@@ -101,9 +126,5 @@ export class UserTableComponent implements OnInit {
       horizontalPosition: "right",
       data: status
     });
-  }
-
-  scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

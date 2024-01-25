@@ -16,6 +16,10 @@ export class UserService {
     return this.http.get<user[]>(API_URL);
   }
 
+  searchUsers(query:string, param:string) {
+    return this.http.get<user[]>(API_URL, {params:{name:query}});
+  }
+
   getUserById(id:number) {
     return this.http.get<user>(API_URL + '/' + id);
   }

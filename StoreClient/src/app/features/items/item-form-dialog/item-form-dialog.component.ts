@@ -84,13 +84,20 @@ export class ItemFormDialogComponent implements OnInit {
         salePrice: parseFloat(this.itemForm.controls['salePrice'].value)
       }
 
-      if (this.currentItem && this.currentOperation.includes('Update')) {
+      if (this.currentItem.id && this.currentOperation.includes('Update')) {
         pendingItem.id = this.currentItem.id;
-        this.saveItem(pendingItem);
+        this.updateItem(pendingItem);
       }
 
       else this.saveItem(pendingItem);
     }
+  }
+
+  private updateItem(item:item) {
+    this.itemService.updateItem(item).subscribe({
+      next: () => this.handleResult('success'),
+      error: () => this.handleResult('failed')
+    });
   }
 
   private saveItem(item:item) {

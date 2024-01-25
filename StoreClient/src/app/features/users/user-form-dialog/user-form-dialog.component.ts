@@ -9,9 +9,9 @@ import {userStatus} from "../../../core/models/user-status.model";
 import {ConfirmDialogComponent} from "../../../shared/confirm-dialog/confirm-dialog.component";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogClose, MatDialogRef} from "@angular/material/dialog";
 import {EmployeeService} from "../../../core/services/employee/employee.service";
-import {employee} from "../../../core/models/employee.model";
 import {NotificationSnackBarComponent} from "../../../shared/notification-snack-bar/notification-snack-bar.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {LoadingComponent} from "../../../shared/loading/loading.component";
 
 @Component({
   selector: 'app-user-form-dialog',
@@ -20,21 +20,20 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     ReactiveFormsModule,
     FormsModule,
     ConfirmDialogComponent,
-    MatDialogClose
+    MatDialogClose,
+    LoadingComponent
   ],
   templateUrl: './user-form-dialog.component.html'
 })
 export class UserFormDialogComponent implements OnInit {
 
   userForm: FormGroup;
-  newRoleForm: FormGroup;
   roleForm: FormGroup;
 
   roleList: role[] = [];
   userStatusList: userStatus[] = [];
   userRoleList: role[] = [];
 
-  isNewRoleFormEnabled = false;
   isLoading = true;
 
   currentOperation = '';
@@ -54,7 +53,7 @@ export class UserFormDialogComponent implements OnInit {
     this.userForm = this.formBuilder.group({
       username: [
         null,
-        [Validators.required, Validators.min(4), Validators.pattern(/^[A-Za-z0-9]{4,}$/)]
+        [Validators.required, Validators.pattern(/^[a-z0-9]+$/)]
       ],
 
       password: [
@@ -68,33 +67,16 @@ export class UserFormDialogComponent implements OnInit {
       ],
 
       userStatus: [
-        'default',
+        '',
         [Validators.required, Validators.pattern(/^[0-9]*$/)]
       ],
     });
 
     this.roleForm = this.formBuilder.group({
       role: [
-        'default',
+        '',
         [Validators.required, Validators.pattern(/^[0-9]*$/)]
       ]
-    });
-
-    this.newRoleForm = this.formBuilder.group({
-      roleName: [
-        {value:null, disabled:true},
-        [Validators.required, Validators.pattern(/^[A-Za-z]*$/)]
-      ],
-
-      module: [
-        {value:'default', disabled:true},
-        [Validators.required, Validators.pattern(/^[0-9]*$/)]
-      ],
-
-      operation: [
-        {value:'default', disabled:true},
-        [Validators.required, Validators.pattern(/^[0-9]*$/)]
-      ],
     });
   }
 
@@ -123,7 +105,7 @@ export class UserFormDialogComponent implements OnInit {
       });
 
     } else {
-      this.currentOperation = 'Create';
+      this.currentOperation = 'Create User';
       this.isLoading = false;
     }
   }
@@ -149,39 +131,42 @@ export class UserFormDialogComponent implements OnInit {
   }
 
   handleSubmit() {
-    if (this.userForm.valid) {
-      let employee = <employee>({});
-
+    if (this.userForm.valid && this.userRoleList.length > 0) {
       this.employeeService.getEmployeeByEmpNo(this.userForm.controls['empNo'].value).subscribe({
-        next: data => employee = data,
+        next: employee => {
+          const pendingUser : user = {
+            employee: employee,
+            username: this.userForm.controls['username'].value,
+            password: this.userForm.controls['password'].value,
+            roles: this.userRoleList,
+            userStatus: {id: parseInt(this.userForm.controls['userStatus'].value)},
+          }
+
+          if (this.currentUser.id && this.currentOperation.includes('Update')) {
+            pendingUser.id = this.currentUser.id;
+            this.updateUser(pendingUser);
+          }
+
+          else this.saveUser(pendingUser);
+        },
+
         error: () => this.handleResult('failed')
       });
-
-      const pendingUser : user = {
-        employee: employee,
-        username: this.userForm.controls['username'].value,
-        password: this.userForm.controls['password'].value,
-        roles: this.userRoleList,
-        userStatus: {id: parseInt(this.userForm.controls['userStatus'].value)},
-      }
-      console.log(pendingUser)
-
-      if (this.currentUser && this.currentOperation.includes('Update')) {
-        pendingUser.id = this.currentUser.id;
-        this.saveUser(pendingUser);
-      }
-
-      else this.saveUser(pendingUser);
     }
   }
 
   private saveUser(user:user) {
     this.userService.saveUser(user).subscribe({
       next: () => this.handleResult('success'),
-      error: (error) => {
-        console.log(error)
-        this.handleResult('failed');
-      }
+      error: () => this.handleResult('failed')
+    });
+  }
+
+  private updateUser(user:user) {
+    this.userService.updateUser(user).subscribe({
+      next: () => this.handleResult('success'),
+      error: () => this.handleResult('failed')
+
     });
   }
 
@@ -199,18 +184,6 @@ export class UserFormDialogComponent implements OnInit {
 
   removeFromRoleList(roleId:number) {
     this.userRoleList = this.userRoleList.filter(r => r.id !== roleId);
-  }
-
-  toggleCustomRoleForm() {
-    if (this.isNewRoleFormEnabled) {
-      this.newRoleForm.disable();
-      this.isNewRoleFormEnabled = false;
-    }
-
-    else {
-      this.newRoleForm.enable();
-      this.isNewRoleFormEnabled = true;
-    }
   }
 
   handleResult(status:string) {

@@ -7,11 +7,17 @@ import {SupplierFormDialogComponent} from "../supplier-form-dialog/supplier-form
 import {AuthorizationService} from "../../../core/services/auth/authorization.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {NotificationSnackBarComponent} from "../../../shared/notification-snack-bar/notification-snack-bar.component";
+import {LoadingComponent} from "../../../shared/loading/loading.component";
+import {ErrorComponent} from "../../../shared/error/error.component";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-supplier-table',
   standalone: true,
-  imports: [],
+  imports: [
+    LoadingComponent,
+    ErrorComponent
+  ],
   templateUrl: './supplier-table.component.html'
 })
 export class SupplierTableComponent implements OnInit {
@@ -24,11 +30,15 @@ export class SupplierTableComponent implements OnInit {
   isFailed = false;
   isLoading = false;
 
+  currentSearchQuery = '';
+  currentSearchParam = '';
+
   constructor(
     private supplierService:SupplierService,
     private authorizationService:AuthorizationService,
     private dialog:MatDialog,
-    private snackBar:MatSnackBar
+    private snackBar:MatSnackBar,
+    private route:ActivatedRoute
   ) { }
 
   ngOnInit(): void {
@@ -37,17 +47,14 @@ export class SupplierTableComponent implements OnInit {
     this.hasUpdateAuthority = this.authorizationService.hasAuthority('Suppliers-Update');
     this.hasDeleteAuthority = this.authorizationService.hasAuthority('Suppliers-Delete');
 
-    this.supplierService.getAllSuppliers().subscribe({
-      next: data => {
-        this.suppliers = data;
-        this.isFailed = false;
-        this.isLoading = false;
-      },
-
-      error: () => {
-        this.isLoading = false;
-        this.isFailed = true;
+    this.route.queryParams.subscribe((params:any) =>{
+      if (params.query && params.filter) {
+        this.currentSearchParam = params.filter;
+        this.currentSearchQuery = params.query;
+        this.searchSuppliersWithCurrentQuery();
       }
+
+      else this.refreshSupplierList();
     });
   }
 
@@ -56,10 +63,29 @@ export class SupplierTableComponent implements OnInit {
       next: data => {
         this.suppliers = data;
         this.isFailed = false;
+        this.isLoading = false;
       },
 
       error: () => {
         this.isFailed = true;
+        this.isLoading = false;
+      }
+    });
+  }
+
+  searchSuppliersWithCurrentQuery() {
+    this.isLoading = true;
+
+    this.supplierService.searchSuppliers(this.currentSearchQuery, this.currentSearchParam).subscribe({
+      next: data => {
+        this.suppliers = data;
+        this.isFailed = false;
+        this.isLoading = false;
+      },
+
+      error: () => {
+        this.isFailed = true;
+        this.isLoading = false;
       }
     });
   }
@@ -98,9 +124,5 @@ export class SupplierTableComponent implements OnInit {
       horizontalPosition: "right",
       data: status
     });
-  }
-
-  scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

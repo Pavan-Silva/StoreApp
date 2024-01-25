@@ -41,7 +41,7 @@
         />
 
         <select class="select select-bordered" formControlName="userStatus">
-          <option disabled value="default">User Status</option>
+          <option disabled value="">User Status</option>
 
           @for (status of userStatusList; track userStatusList) {
             <option value="{{status.id}}">{{status.name}}</option>
@@ -53,7 +53,7 @@
 
       <form [formGroup]="roleForm" class="flex mt-3 mb-2 items-center">
         <select class="select select-bordered w-full mr-2" formControlName="role">
-          <option disabled value="default">Role</option>
+          <option disabled value="">Role</option>
 
           @for (role of roleList; track roleList) {
             <option value="{{role.id}}">{{role.name}}</option>
@@ -84,40 +84,6 @@
         }
       </div>
 
-      <!--    <div class="flex flex-row mt-6 items-center">-->
-      <!--      <span class="block text-lg font-semibold">Create Role</span>-->
-      <!--      <input type="checkbox" class="toggle ml-auto" (click)="toggleCustomRoleForm()"/>-->
-      <!--    </div>-->
-
-      <!--    <form [formGroup]="newRoleForm">-->
-      <!--      <input-->
-      <!--        type="text"-->
-      <!--        placeholder="Role Name"-->
-      <!--        class="input input-bordered w-full mt-3"-->
-      <!--        formControlName="roleName"-->
-      <!--      />-->
-
-      <!--      <div class="flex flex-row items-center mt-3">-->
-      <!--        <select class="select select-bordered w-full mr-2" formControlName="module" >-->
-      <!--          <option disabled value="default">Module</option>-->
-
-      <!--          @for (module of moduleList; track moduleList) {-->
-      <!--            <option value="{{module.id}}">{{module.name}}</option>-->
-      <!--          }-->
-      <!--        </select>-->
-
-      <!--        <select class="select select-bordered w-full mr-2" formControlName="operation">-->
-      <!--          <option disabled value="default">Operation</option>-->
-
-      <!--          @for (operation of operationList; track operationList) {-->
-      <!--            <option value="{{operation.id}}">{{operation.name}}</option>-->
-      <!--          }-->
-      <!--        </select>-->
-
-      <!--        <button class="btn" [disabled]="!isNewRoleFormEnabled">Add</button>-->
-      <!--      </div>-->
-      <!--    </form>-->
-
       <button
         data-theme="dark"
         class="btn w-full mt-5 text-white"
@@ -128,9 +94,6 @@
     </form>
 
   } @else {
-    <div class="flex items-center">
-      <span class="loading loading-spinner loading-md text-gray-400 mr-3"></span>
-      <span>Loading</span>
-    </div>
+    <app-loading/>
   }
 </div>

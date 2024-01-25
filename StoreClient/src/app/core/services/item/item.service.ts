@@ -17,7 +17,7 @@ export class ItemService {
   }
 
   searchItems(query:string, param:string) {
-    return this.http.get<item[]>(API_URL);
+    return this.http.get<item[]>(API_URL, {params:{name:query}});
   }
 
   getItemById(id:number) {
