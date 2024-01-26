@@ -1,6 +1,7 @@
 package com.example.storeapi.service.impl;
 
 import com.example.storeapi.dto.PurchaseOrderDto;
+import com.example.storeapi.exception.ResourceAlreadyExistsException;
 import com.example.storeapi.exception.ResourceNotFoundException;
 import com.example.storeapi.model.PurchaseOrder;
 import com.example.storeapi.repository.PurchaseOrderRepository;
@@ -43,8 +44,11 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
     @Override
     public PurchaseOrderDto update(PurchaseOrderDto purchaseOrderDto) {
-        purchaseOrderRepository.findById(purchaseOrderDto.getId())
+        PurchaseOrder order = purchaseOrderRepository.findById(purchaseOrderDto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Invalid purchase order id"));
+
+        if (order.getOrderStatus().getName().equals("Completed"))
+            throw new ResourceAlreadyExistsException("Completed orders cannot be modified");
 
         PurchaseOrder purchaseOrder = ObjectMapper.Map.dtoToPurchaseOrder(purchaseOrderDto);
         return ObjectMapper.Map.purchaseOrderToDto(purchaseOrderRepository.save(purchaseOrder));

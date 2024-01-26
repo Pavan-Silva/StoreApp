@@ -1,6 +1,7 @@
 package com.example.storeapi.service.impl;
 
 import com.example.storeapi.dto.PorderItemDto;
+import com.example.storeapi.exception.ResourceAlreadyExistsException;
 import com.example.storeapi.exception.ResourceNotFoundException;
 import com.example.storeapi.model.PorderItem;
 import com.example.storeapi.repository.PorderItemRepository;
@@ -46,8 +47,11 @@ public class PorderItemServiceImpl implements PorderItemService {
 
     @Override
     public PorderItemDto update(PorderItemDto porderItemDto) {
-        porderItemRepository.findById(porderItemDto.getId())
+        PorderItem item = porderItemRepository.findById(porderItemDto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Invalid purchase order item id"));
+
+        if (item.getOrder().getOrderStatus().getName().equals("Completed"))
+            throw new ResourceAlreadyExistsException("Completed orders cannot be modified");
 
         if (porderItemDto.getItem() != null) {
             porderItemDto.setLineTotal(
