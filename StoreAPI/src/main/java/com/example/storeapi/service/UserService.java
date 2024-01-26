@@ -2,11 +2,12 @@ package com.example.storeapi.service;
 
 import com.example.storeapi.dto.UserDto;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface UserService {
 
-    List<UserDto> getAllUsers();
+    List<UserDto> getAllUsers(HashMap<String, String> params);
 
     UserDto getUserById(int id);
 

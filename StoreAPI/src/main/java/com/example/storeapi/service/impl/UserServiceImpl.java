@@ -13,9 +13,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -25,9 +27,19 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public List<UserDto> getAllUsers() {
-        return userRepository.findAll().stream()
+    public List<UserDto> getAllUsers(HashMap<String, String> params) {
+        List<User> users = userRepository.findAll();
+
+        if (params.isEmpty()) return users.stream()
                 .map(ObjectMapper.Map::userToDto)
+                .collect(Collectors.toList());
+
+        String name = params.get("name");
+
+        Stream<User> ustream = users.stream();
+        if (name != null) ustream = ustream.filter(u -> u.getUsername().toLowerCase().contains(name.toLowerCase()));
+
+        return ustream.map(ObjectMapper.Map::userToDto)
                 .collect(Collectors.toList());
     }
 

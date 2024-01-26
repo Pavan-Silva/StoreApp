@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -17,8 +18,8 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('Users-Read')")
-    public List<UserDto> getUsers() {
-        return userService.getAllUsers();
+    public List<UserDto> getUsers(@RequestParam HashMap<String, String> params) {
+        return userService.getAllUsers(params);
     }
 
     @GetMapping("/emp/{empNo}")

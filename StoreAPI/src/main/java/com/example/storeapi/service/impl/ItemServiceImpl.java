@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +22,18 @@ public class ItemServiceImpl implements ItemService  {
 
     @Override
     public List<ItemDto> getAll(HashMap<String, String> params) {
-        return itemRepository.findAll().stream()
+        List<Item> items = itemRepository.findAll();
+
+        if (params.isEmpty()) return items.stream()
                 .map(ObjectMapper.Map::itemToDto)
+                .collect(Collectors.toList());
+
+        String name = params.get("name");
+
+        Stream<Item> istream = items.stream();
+        if (name != null) istream = istream.filter(i -> i.getName().toLowerCase().contains(name.toLowerCase()));
+
+        return istream.map(ObjectMapper.Map::itemToDto)
                 .collect(Collectors.toList());
     }
 

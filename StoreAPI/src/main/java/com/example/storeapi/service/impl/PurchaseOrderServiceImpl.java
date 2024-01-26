@@ -21,6 +21,15 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
 
     @Override
     public List<PurchaseOrderDto> getAll(HashMap<String, String> params) {
+        List<PurchaseOrder> purchaseOrders = purchaseOrderRepository.findAll();
+
+        if (params.isEmpty()) return purchaseOrders.stream()
+                .map(ObjectMapper.Map::purchaseOrderToDto)
+                .collect(Collectors.toList());
+
+        String name = params.get("name");
+        String supplier = params.get("supplier");
+
         return purchaseOrderRepository.findAll().stream()
                 .map(ObjectMapper.Map::purchaseOrderToDto)
                 .collect(Collectors.toList());
