@@ -13,11 +13,19 @@ export class PorderItemService {
   constructor(private http: HttpClient) { }
 
   getItemsByOrderId(id:number) {
-    return this.http.get<porderItem[]>(API_URL, {params:{orderId:id}});
+    return this.http.get<porderItem[]>(API_URL, {params:{orderid:id}});
   }
 
-  saveOrder(item:porderItem) {
+  getOrderItemById(id:number) {
+    return this.http.get<porderItem>(API_URL+ '/' + id);
+  }
+
+  saveOrderItem(item:porderItem) {
     return this.http.post<porderItem>(API_URL, item);
+  }
+
+  updateOrderItem(item:porderItem) {
+    return this.http.put<porderItem>(API_URL, item);
   }
 
   deleteById(id:number) {

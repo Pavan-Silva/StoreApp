@@ -9,6 +9,7 @@ import com.example.storeapi.util.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +32,6 @@ public class PorderItemServiceImpl implements PorderItemService {
         String orderId = params.get("orderid");
 
         Stream<PorderItem> stream = itemList.stream();
-
         if (orderId != null) stream = stream.filter(i -> i.getOrder().getId() == Integer.parseInt(orderId));
 
         return stream.map(ObjectMapper.Map::porderItemToDto)
@@ -49,12 +49,26 @@ public class PorderItemServiceImpl implements PorderItemService {
         porderItemRepository.findById(porderItemDto.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Invalid purchase order item id"));
 
+        if (porderItemDto.getItem() != null) {
+            porderItemDto.setLineTotal(
+                    porderItemDto.getItem()
+                            .getPurchasePrice().multiply(BigDecimal.valueOf(porderItemDto.getQuantity()))
+            );
+        } else throw new ResourceNotFoundException("Invalid purchase order");
+
         PorderItem porderItem = ObjectMapper.Map.dtoToPorderItem(porderItemDto);
         return ObjectMapper.Map.porderItemToDto(porderItemRepository.save(porderItem));
     }
 
     @Override
     public PorderItemDto save(PorderItemDto porderItemDto) {
+        if (porderItemDto.getItem() != null) {
+            porderItemDto.setLineTotal(
+                    porderItemDto.getItem()
+                            .getPurchasePrice().multiply(BigDecimal.valueOf(porderItemDto.getQuantity()))
+            );
+        } else throw new ResourceNotFoundException("Invalid purchase order provided");
+
         PorderItem porderItem = ObjectMapper.Map.dtoToPorderItem(porderItemDto);
         return ObjectMapper.Map.porderItemToDto(porderItemRepository.save(porderItem));
     }

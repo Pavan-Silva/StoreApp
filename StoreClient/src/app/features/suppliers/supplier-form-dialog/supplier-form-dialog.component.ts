@@ -47,7 +47,7 @@ export class SupplierFormDialogComponent implements OnInit {
     this.supplierForm = this.formBuilder.group({
       name: [
         null,
-        [Validators.required, Validators.pattern(/^[a-zA-Z]{3,}$/)]
+        [Validators.required, Validators.pattern(/^[a-zA-Z]+$/)]
       ],
 
       address: [null, Validators.required],
@@ -76,7 +76,7 @@ export class SupplierFormDialogComponent implements OnInit {
     } else this.currentOperation = 'Add Supplier';
   }
 
-  autofillForm() {
+  private autofillForm() {
     this.supplierForm.setValue({
       name: this.currentSupplier.name,
       contactNo: this.currentSupplier.contactNo,
@@ -93,7 +93,7 @@ export class SupplierFormDialogComponent implements OnInit {
     });
   }
 
-  handleSubmit() {
+  private handleSubmit() {
     if (this.supplierForm.valid) {
       const pendingSupplier = {
         name: this.supplierForm.controls['name'].value,
@@ -141,7 +141,7 @@ export class SupplierFormDialogComponent implements OnInit {
     this.supplierForm.reset();
   }
 
-  handleResult(status:string) {
+  private handleResult(status:string) {
     this.dialogRef.close(true);
 
     this.snackBar.openFromComponent(NotificationSnackBarComponent, {

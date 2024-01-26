@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {user} from "../../core/models/user.model";
 import {UserFormDialogComponent} from "../../features/users/user-form-dialog/user-form-dialog.component";
 import {
@@ -23,7 +23,7 @@ import {Router} from "@angular/router";
   ],
   templateUrl: './toolbar.component.html'
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent implements OnInit, OnChanges {
 
   protected isFormEnabled = false;
   protected userRole: string | undefined;
@@ -35,10 +35,15 @@ export class ToolbarComponent implements OnInit {
   @Output() logoutEvent = new EventEmitter();
 
   constructor(
-    private authorizationService:AuthorizationService,
-    private dialog:MatDialog,
-    private router:Router
-  ) {}
+    private authorizationService: AuthorizationService,
+    private dialog: MatDialog,
+    private router: Router
+  ) {
+  }
+
+  ngOnChanges(): void {
+    this.isInSearch = this.router.url.includes('?');
+  }
 
   ngOnInit(): void {
     this.isFormEnabled = this.authorizationService.hasAuthority(this.currentModule + '-Write');
@@ -46,8 +51,6 @@ export class ToolbarComponent implements OnInit {
     if (this.authorizationService.hasRole('ADMIN')) this.userRole = 'Admin';
     else if (this.authorizationService.hasRole('MANAGER')) this.userRole = 'Manager';
     else this.userRole = this.user.roles[0].name;
-
-    if (this.router.url.includes('?')) this.isInSearch = true;
   }
 
   openFormDialog() {
@@ -82,7 +85,7 @@ export class ToolbarComponent implements OnInit {
 
   handleSearch(query:string, filter:string) {
     if (query && filter) {
-      this.router.navigate(['/employees'], {
+      this.router.navigate(['/' + this.currentModule.toLowerCase()], {
         queryParams:{filter:filter, query:query}
       }).then(() => { this.isInSearch = true});
     }

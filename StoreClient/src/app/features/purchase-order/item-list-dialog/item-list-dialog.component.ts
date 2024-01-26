@@ -4,6 +4,9 @@ import {PorderItemService} from "../../../core/services/order/porder-item.servic
 import {porderItem} from "../../../core/models/porder-item.model";
 import {AuthorizationService} from "../../../core/services/auth/authorization.service";
 import {ConfirmDialogComponent} from "../../../shared/confirm-dialog/confirm-dialog.component";
+import {OrderItemFormDialogComponent} from "../order-item-form-dialog/order-item-form-dialog.component";
+import {NotificationSnackBarComponent} from "../../../shared/notification-snack-bar/notification-snack-bar.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-item-list-dialog',
@@ -14,6 +17,7 @@ import {ConfirmDialogComponent} from "../../../shared/confirm-dialog/confirm-dia
   templateUrl: './item-list-dialog.component.html'
 })
 export class ItemListDialogComponent implements OnInit {
+
   protected hasUpdateAuthority = false;
   protected hasDeleteAuthority = false;
 
@@ -22,13 +26,12 @@ export class ItemListDialogComponent implements OnInit {
 
   itemList: porderItem[] = [];
 
-  currentOperation:string = '';
-
   constructor(
     private dialog:MatDialog,
     private orderItemService:PorderItemService,
     private authorizationService:AuthorizationService,
-    @Inject(MAT_DIALOG_DATA) private orderId:number
+    private snackBar:MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) private data:{orderId:number, orderStatus:string}
   ) {}
 
   ngOnInit(): void {
@@ -37,7 +40,16 @@ export class ItemListDialogComponent implements OnInit {
     this.hasUpdateAuthority = this.authorizationService.hasAuthority('PurchaseOrders-Update');
     this.hasDeleteAuthority = this.authorizationService.hasAuthority('PurchaseOrders-Delete');
 
-    this.orderItemService.getItemsByOrderId(this.orderId).subscribe({
+    if (this.data.orderStatus === 'Completed') {
+      this.hasDeleteAuthority = false;
+      this.hasUpdateAuthority = false;
+    }
+
+    this.refreshOrderItemList();
+  }
+
+  refreshOrderItemList() {
+    this.orderItemService.getItemsByOrderId(this.data.orderId).subscribe({
       next: data => {
         this.itemList = data;
         this.isFailed = false;
@@ -51,14 +63,48 @@ export class ItemListDialogComponent implements OnInit {
     });
   }
 
-  showConfirmationDialog() {
-    this.dialog.open(ConfirmDialogComponent, {data:'Edit Order Item'})
-      .afterClosed().subscribe(res => {
-      if (res) this.handleSubmit();
+  showNewFormDialog() {
+    this.dialog.open(OrderItemFormDialogComponent,
+      {data: {orderId:this.data.orderId}
+      }).afterClosed().subscribe((refresh:boolean) => {
+      if (refresh) this.refreshOrderItemList();
     });
   }
 
-  handleSubmit() {
+  showFormDialog(item:porderItem) {
+    this.dialog.open(OrderItemFormDialogComponent,
+      {data: {
+            currentOrderItemId:item.id,
+            orderId:this.data.orderId
+          }
+      }).afterClosed().subscribe((refresh:boolean) => {
+      if (refresh) this.refreshOrderItemList();
+    });
+  }
 
+  deleteOrderItem(item:porderItem) {
+    this.dialog.open(ConfirmDialogComponent, {data:'Edit Order Item'})
+      .afterClosed().subscribe(res => {
+      if (res && item.id) {
+        this.orderItemService.deleteById(item.id).subscribe({
+          next: () => {
+            this.refreshOrderItemList();
+            this.handleResult('success');
+          },
+
+          error: () => {
+            this.handleResult('failed');
+          }
+        });
+      }
+    });
+  }
+
+  handleResult(status:string) {
+    this.snackBar.openFromComponent(NotificationSnackBarComponent, {
+      duration: 3000,
+      horizontalPosition: "right",
+      data: status
+    });
   }
 }

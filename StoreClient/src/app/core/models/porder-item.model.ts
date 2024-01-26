@@ -3,8 +3,8 @@ import {item} from "./item.model";
 
 export interface porderItem {
   id?: number;
-  lineTotal: number;
+  lineTotal?: number;
   quantity: number;
-  purchaseOrder: purchaseOrder;
+  order: purchaseOrder;
   item: item;
 }

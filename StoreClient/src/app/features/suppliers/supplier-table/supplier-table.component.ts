@@ -106,6 +106,7 @@ export class SupplierTableComponent implements OnInit {
         if (supplier.id) {
           this.supplierService.deleteById(supplier.id).subscribe({
             next: () => {
+              this.refreshSupplierList();
               this.handleResult('success');
             },
 

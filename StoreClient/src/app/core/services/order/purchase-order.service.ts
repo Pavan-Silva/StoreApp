@@ -17,8 +17,20 @@ export class PurchaseOrderService {
     return this.http.get<purchaseOrder[]>(API_URL);
   }
 
+  getOrderById(id:number) {
+    return this.http.get<purchaseOrder>(API_URL + '/' + id);
+  }
+
+  searchPurchaseOrders(query:string, filter:string) {
+    return this.http.get<purchaseOrder[]>(API_URL, {params:{supplier:query}});
+  }
+
   saveOrder(item:item) {
     return this.http.post<purchaseOrder>(API_URL, item);
+  }
+
+  updateOrder(item:item) {
+    return this.http.put<purchaseOrder>(API_URL, item);
   }
 
   deleteById(id:number) {

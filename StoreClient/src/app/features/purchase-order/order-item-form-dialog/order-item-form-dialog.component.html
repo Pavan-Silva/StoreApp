@@ -1,1 +1,56 @@
-<p>order-item-form-dialog works!</p>
+<div class="p-5 rounded-md min-w-fit max-w-md">
+  @if (!isLoading) {
+    <form [formGroup]="orderItemForm">
+      <div class="flex items-center">
+        <span class="block text-lg font-semibold">Order Item Info</span>
+
+        <button class="rounded-full p-1 hover:bg-gray-200 ml-auto" mat-dialog-close>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="flex">
+        <div class="tooltip tooltip-bottom w-full mt-5 mr-2" data-tip="Item">
+          <select class="select select-bordered w-full" formControlName="item">
+            <option disabled value="">Item</option>
+
+            @for (item of itemList; track itemList) {
+              <option value="{{item.id}}">{{item.name}}</option>
+            }
+          </select>
+        </div>
+
+        <div class="tooltip tooltip-bottom w-fit mt-5" data-tip="Quantity">
+          <input type="number" placeholder="Quantity" class="input input-bordered w-32" formControlName="quantity">
+        </div>
+      </div>
+
+      <div class="flex flex-row mt-5 max-w-[99%]">
+        <button
+          data-theme="dark"
+          class="btn text-white mr-2 w-1/2"
+          (click)="showConfirmationDialog()">
+
+          Add
+        </button>
+
+        <button class="btn w-1/2" (click)="clearForm()">Clear Form</button>
+      </div>
+    </form>
+
+  } @else {
+    <div class="flex items-center">
+      <span class="loading loading-spinner loading-md text-gray-400 mr-3"></span>
+      <span>Loading</span>
+    </div>
+  }
+</div>

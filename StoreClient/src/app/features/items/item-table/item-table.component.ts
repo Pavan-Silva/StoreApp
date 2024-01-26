@@ -102,19 +102,17 @@ export class ItemTableComponent implements OnInit {
 
     this.dialog.open(ConfirmDialogComponent, {data:operation})
       .afterClosed().subscribe(res => {
-      if (res) {
-        if (item.id) {
-          this.itemService.deleteById(item.id).subscribe({
-            next: () => {
-             this.refreshItemList();
-              this.handleResult('success');
-            },
+      if (res && item.id) {
+        this.itemService.deleteById(item.id).subscribe({
+          next: () => {
+           this.refreshItemList();
+            this.handleResult('success');
+          },
 
-            error: () => {
-              this.handleResult('failed');
-            }
-          });
-        } else this.handleResult('failed');
+          error: () => {
+            this.handleResult('failed');
+          }
+        });
       }
     });
   }

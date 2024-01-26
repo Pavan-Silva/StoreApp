@@ -7,6 +7,10 @@ import {ItemListDialogComponent} from "../item-list-dialog/item-list-dialog.comp
 import {PurchaseOrderFormDialogComponent} from "../purchase-order-form-dialog/purchase-order-form-dialog.component";
 import {ErrorComponent} from "../../../shared/error/error.component";
 import {LoadingComponent} from "../../../shared/loading/loading.component";
+import {ConfirmDialogComponent} from "../../../shared/confirm-dialog/confirm-dialog.component";
+import {NotificationSnackBarComponent} from "../../../shared/notification-snack-bar/notification-snack-bar.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-purchase-orders',
@@ -27,10 +31,15 @@ export class PurchaseOrderTableComponent implements OnInit {
   isFailed = false;
   isLoading = false;
 
+  currentSearchQuery = '';
+  currentSearchParam = '';
+
   constructor(
     private purchaseOrderService:PurchaseOrderService,
     private authorizationService:AuthorizationService,
-    private dialog:MatDialog
+    private dialog:MatDialog,
+    private snackBar:MatSnackBar,
+    private route:ActivatedRoute
   ) { }
 
   ngOnInit(): void {
@@ -39,6 +48,18 @@ export class PurchaseOrderTableComponent implements OnInit {
     this.hasUpdateAuthority = this.authorizationService.hasAuthority('PurchaseOrders-Update');
     this.hasDeleteAuthority = this.authorizationService.hasAuthority('PurchaseOrders-Delete');
 
+    this.route.queryParams.subscribe((params:any) =>{
+      if (params.query && params.filter) {
+        this.currentSearchParam = params.filter;
+        this.currentSearchQuery = params.query;
+        this.searchOrdersWithCurrentQuery();
+      }
+
+      else this.refreshOrderList();
+    });
+  }
+
+  refreshOrderList() {
     this.purchaseOrderService.getAllOrders().subscribe({
       next: data => {
         this.orders = data;
@@ -53,39 +74,66 @@ export class PurchaseOrderTableComponent implements OnInit {
     });
   }
 
+  searchOrdersWithCurrentQuery() {
+    this.isLoading = true;
+
+    this.purchaseOrderService.searchPurchaseOrders(this.currentSearchQuery, this.currentSearchParam).subscribe({
+      next: data => {
+        this.orders = data;
+        this.isFailed = false;
+        this.isLoading = false;
+      },
+
+      error: () => {
+        this.isFailed = true;
+        this.isLoading = false;
+      }
+    });
+  }
+
   viewItemList(order:purchaseOrder) {
-    this.dialog.open(ItemListDialogComponent, {data:order.id});
+    this.dialog.open(ItemListDialogComponent, {
+      data:{
+        orderId:order.id,
+        orderStatus:order.orderStatus.name
+      }
+    });
   }
 
-  showEditDialog(order:purchaseOrder) {
-    this.dialog.open(PurchaseOrderFormDialogComponent, {data:order.id});
-  }
-
-  showConfirmationDialog(order:purchaseOrder) {
-    // const operation = "Delete Order";
-    //
-    // this.dialog.open(ConfirmDialogComponent, {data:operation})
-    //   .afterClosed().subscribe(res => {
-    //   if (res) this.deleteOrder(order);
-    // });
+  showFormDialog(order:purchaseOrder) {
+    this.dialog.open(PurchaseOrderFormDialogComponent, {data:order.id})
+      .afterClosed().subscribe((refresh:boolean) => {
+      if (refresh) this.refreshOrderList();
+    });
   }
 
   deleteOrder(order:purchaseOrder) {
-    // if (order.id) {
-    //   this.purchaseOrderService.deleteById(order.id).subscribe({
-    //     next: () => {
-    //       this.showResultDialog('Success');
-    //     },
-    //
-    //     error: () => {
-    //       this.showResultDialog('Failed');
-    //     }
-    //   });
-    // } else this.showResultDialog('Failed');
+    const operation = "Delete Order";
+
+    this.dialog.open(ConfirmDialogComponent, {data:operation})
+      .afterClosed().subscribe(res => {
+      if (res) {
+        if (order.id) {
+          this.purchaseOrderService.deleteById(order.id).subscribe({
+            next: () => {
+              this.refreshOrderList();
+              this.handleResult('success');
+            },
+
+            error: () => {
+              this.handleResult('failed');
+            }
+          });
+        } else this.handleResult('failed');
+      }
+    });
   }
 
-  // showResultDialog(status:string) {
-  //   this.dialog.open(ResultDialogComponent, {data:status})
-  //     .afterClosed().subscribe(() => this.pageRefresh());
-  // }
+  private handleResult(status:string) {
+    this.snackBar.openFromComponent(NotificationSnackBarComponent, {
+      duration: 3000,
+      horizontalPosition: "right",
+      data: status
+    });
+  }
 }
