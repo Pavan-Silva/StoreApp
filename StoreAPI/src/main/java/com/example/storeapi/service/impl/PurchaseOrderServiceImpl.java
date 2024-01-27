@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -28,11 +29,13 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
                 .map(ObjectMapper.Map::purchaseOrderToDto)
                 .collect(Collectors.toList());
 
-        String name = params.get("name");
         String supplier = params.get("supplier");
 
-        return purchaseOrderRepository.findAll().stream()
-                .map(ObjectMapper.Map::purchaseOrderToDto)
+        Stream<PurchaseOrder> stream = purchaseOrders.stream();
+        if (supplier != null) stream = stream.filter(p ->
+                p.getSupplier().getName().toLowerCase().contains(supplier.toLowerCase()));
+
+        return stream.map(ObjectMapper.Map::purchaseOrderToDto)
                 .collect(Collectors.toList());
     }
 
