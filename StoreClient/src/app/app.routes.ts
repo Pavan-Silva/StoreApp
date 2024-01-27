@@ -12,6 +12,7 @@ import {
 } from "./features/purchase-order/purchase-order-list/purchase-order-list.component";
 import {SupplierListComponent} from "./features/suppliers/supplier-list/supplier-list.component";
 import {NotFoundPageComponent} from "./pages/not-found-page/not-found-page.component";
+import {AccessDeniedComponent} from "./pages/access-denied/access-denied.component";
 
 export const routes: Routes = [
   { path:'login', component:LoginPageComponent},
@@ -27,7 +28,8 @@ export const routes: Routes = [
       { path: 'dashboard', component:DashboardComponent },
       { path: 'users', component:UserListComponent },
       { path: 'items', component:ItemListComponent },
-      { path: 'suppliers', component:SupplierListComponent }
+      { path: 'suppliers', component:SupplierListComponent },
+      { path: 'access-denied', component:AccessDeniedComponent }
     ]
   },
   { path: '**', component:NotFoundPageComponent },

@@ -2,7 +2,10 @@
   <input id="drawer" type="checkbox" class="drawer-toggle"/>
 
   <div class="drawer-content flex flex-col bg-gray-500 bg-opacity-5">
-    <app-toolbar [currentModule]="currentModule" [user]="user" (logoutEvent)="logOut()"/>
+    @if (currentModule !== 'Access-denied') {
+      <app-toolbar [currentModule]="currentModule" [user]="user" (logoutEvent)="logOut()"/>
+    }
+
     <router-outlet></router-outlet>
   </div>
 

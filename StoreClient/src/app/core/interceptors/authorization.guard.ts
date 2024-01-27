@@ -8,11 +8,19 @@ export const authorizationGuard: CanActivateChildFn = (route) => {
     const path = route.url[0].path;
 
     if (path.includes('users')) {
-      return inject(AuthorizationService).hasRole('ADMIN');
+      if (inject(AuthorizationService).hasRole('ADMIN')) return true;
+      else {
+        inject(Router).navigate(['/access-denied']).then();
+        return false;
+      }
     }
 
     else if (path.includes('employees')) {
-      return inject(AuthorizationService).hasRole('MANAGER');
+      if (inject(AuthorizationService).hasRole('MANAGER')) return true;
+      else {
+        inject(Router).navigate(['/access-denied']).then();
+        return false;
+      }
     }
 
     else return true;

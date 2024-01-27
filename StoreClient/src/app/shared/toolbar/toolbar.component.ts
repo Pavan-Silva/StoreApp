@@ -53,7 +53,7 @@ export class ToolbarComponent implements OnInit, OnChanges {
 
     if (this.authorizationService.hasRole('ADMIN')) this.userRole = 'Admin';
     else if (this.authorizationService.hasRole('MANAGER')) this.userRole = 'Manager';
-    else this.userRole = this.user.roles[0].name;
+    else this.userRole = this.user.roles[0].name.charAt(0) + this.user.roles[0].name.slice(1).toLowerCase();
   }
 
   openFormDialog() {
