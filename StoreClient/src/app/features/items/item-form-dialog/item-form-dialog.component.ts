@@ -6,13 +6,15 @@ import {item} from "../../../core/models/item.model";
 import {ConfirmDialogComponent} from "../../../shared/confirm-dialog/confirm-dialog.component";
 import {NotificationSnackBarComponent} from "../../../shared/notification-snack-bar/notification-snack-bar.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {DialogLoadingComponent} from "../../../shared/dialog-loading/dialog-loading.component";
 
 @Component({
   selector: 'app-item-form-dialog',
   standalone: true,
   imports: [
     MatDialogClose,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DialogLoadingComponent
   ],
   templateUrl: './item-form-dialog.component.html'
 })

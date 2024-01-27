@@ -1,6 +1,6 @@
 <div class="overflow-visible mx-3 flex flex-col bg-white rounded-lg shadow-sm">
   @if (!isFailed && !isLoading) {
-    <div class="flex items-center m-3">
+    <div class="flex items-center m-3 animate-fade">
       <span class="block text-lg font-semibold">Order Items</span>
 
       @if (hasUpdateAuthority) {
@@ -37,7 +37,7 @@
     </div>
 
     @if (itemList.length > 0) {
-      <table class="table mb-2">
+      <table class="table mb-2 animate-fade">
         <thead>
         <tr>
           <th>ID</th>
@@ -114,7 +114,7 @@
       </table>
 
     } @else {
-      <span class="flex justify-center w-full p-3">No items</span>
+      <span class="flex justify-center w-full p-3 animate-fade">No items</span>
     }
 
   } @else {

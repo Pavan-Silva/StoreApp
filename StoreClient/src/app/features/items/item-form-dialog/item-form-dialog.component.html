@@ -1,6 +1,6 @@
-<div class="py-6 px-5 rounded-md max-w-md">
+<div class="p-5 rounded-md max-w-md">
   @if (!isLoading) {
-    <form [formGroup]="itemForm">
+    <form [formGroup]="itemForm" class="animate-fade">
       <div class="flex items-center">
         <span class="block text-lg font-semibold">Item Details</span>
 
@@ -57,10 +57,7 @@
     </form>
 
   } @else {
-    <div class="flex items-center">
-      <span class="loading loading-spinner loading-md text-gray-400 mr-3"></span>
-      <span>Loading</span>
-    </div>
+    <app-dialog-loading/>
   }
 </div>
 

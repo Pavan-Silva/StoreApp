@@ -11,6 +11,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogClose, MatDialogRef} from "@angular
 import {EmployeeService} from "../../../core/services/employee/employee.service";
 import {NotificationSnackBarComponent} from "../../../shared/notification-snack-bar/notification-snack-bar.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {DialogLoadingComponent} from "../../../shared/dialog-loading/dialog-loading.component";
 
 @Component({
   selector: 'app-user-form-dialog',
@@ -19,7 +20,8 @@ import {MatSnackBar} from "@angular/material/snack-bar";
     ReactiveFormsModule,
     FormsModule,
     ConfirmDialogComponent,
-    MatDialogClose
+    MatDialogClose,
+    DialogLoadingComponent
   ],
   templateUrl: './user-form-dialog.component.html'
 })

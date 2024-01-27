@@ -11,7 +11,22 @@ module.exports = {
     extend: {
       colors: {
         'brown': '#834333',
-        'light-grey': '#F7F8F9',
+      },
+
+      animation: {
+        fade: "fade 0.5s",
+      },
+
+      keyframes: {
+        fade: {
+          "0%": {
+            opacity: "0%",
+          },
+
+          "100%": {
+            opacity: "100%",
+          },
+        },
       }
     },
   },

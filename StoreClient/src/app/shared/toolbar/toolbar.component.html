@@ -42,7 +42,9 @@
       <input class="input input-md input-bordered join-item" placeholder="Search" #txtSearch/>
 
       <select class="select select-bordered join-item" #txtFilter>
-        <option value="name">Name</option>
+        @if (currentModule !== 'Orders') {
+          <option value="name">Name</option>
+        }
 
         @if (currentModule === 'Employees') {
           <option value="empno">EmpNo</option>
