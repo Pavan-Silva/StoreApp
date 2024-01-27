@@ -1,1 +1,68 @@
-<p>purchase-order-form-dialog works!</p>
+<div class="p-5 rounded-md w-96 h-80 max-w-md">
+  @if (!isLoading) {
+    <form [formGroup]="purchaseOrderForm">
+      <div class="flex items-center">
+        <span class="block text-lg font-semibold">Purchase Order Details</span>
+
+        <button class="rounded-full p-1 hover:bg-gray-200 ml-auto" mat-dialog-close>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="w-6 h-6"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="tooltip tooltip-bottom w-full mt-5 mr-2" data-tip="Supplier">
+        <select class="select select-bordered w-full" formControlName="supplier">
+          <option disabled value="">Supplier</option>
+
+          @for (supplier of supplierList; track supplierList) {
+            <option value="{{supplier.id}}">{{supplier.name}}</option>
+          }
+        </select>
+      </div>
+
+      <div class="tooltip tooltip-bottom w-full mt-3 mr-2" data-tip="Expected Total">
+        <input
+          type="number"
+          class="input input-bordered w-full"
+          placeholder="Expected Total"
+          formControlName="expectedTotal"
+        />
+      </div>
+
+      <div class="flex w-full mt-3">
+        <div class="tooltip tooltip-bottom w-full mr-2" data-tip="Order Status">
+          <select class="select select-bordered w-full" formControlName="orderStatus">
+            <option disabled value="">Order Status</option>
+
+            @for (orderStatus of orderStatusList; track orderStatusList) {
+              <option value="{{orderStatus.id}}">{{orderStatus.name}}</option>
+            }
+          </select>
+        </div>
+
+        <div class="tooltip tooltip-bottom w-full" data-tip="Date Created">
+          <input type="date" class="input input-bordered w-full" formControlName="doCreated"/>
+        </div>
+      </div>
+
+      <button
+        data-theme="dark"
+        class="btn text-white mt-3 w-full"
+        (click)="showConfirmationDialog()"
+      >
+        Submit
+      </button>
+    </form>
+
+  } @else {
+    <app-dialog-loading/>
+  }
+</div>

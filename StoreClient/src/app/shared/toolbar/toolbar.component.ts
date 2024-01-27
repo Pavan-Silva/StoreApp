@@ -12,6 +12,9 @@ import {
 } from "../../features/suppliers/supplier-form-dialog/supplier-form-dialog.component";
 import {FormsModule} from "@angular/forms";
 import {Router} from "@angular/router";
+import {
+  PurchaseOrderFormDialogComponent
+} from "../../features/purchase-order/purchase-order-form-dialog/purchase-order-form-dialog.component";
 
 @Component({
   selector: 'app-toolbar',
@@ -77,6 +80,13 @@ export class ToolbarComponent implements OnInit, OnChanges {
 
     else if (this.currentModule === 'Suppliers') {
       this.dialog.open(SupplierFormDialogComponent)
+        .afterClosed().subscribe((refresh:boolean) => {
+        if (refresh) this.navigateToMainPage();
+      });
+    }
+
+    else if (this.currentModule === 'Orders') {
+      this.dialog.open(PurchaseOrderFormDialogComponent)
         .afterClosed().subscribe((refresh:boolean) => {
         if (refresh) this.navigateToMainPage();
       });

@@ -7,13 +7,15 @@ import {ConfirmDialogComponent} from "../../../shared/confirm-dialog/confirm-dia
 import {OrderItemFormDialogComponent} from "../order-item-form-dialog/order-item-form-dialog.component";
 import {NotificationSnackBarComponent} from "../../../shared/notification-snack-bar/notification-snack-bar.component";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {DialogLoadingComponent} from "../../../shared/dialog-loading/dialog-loading.component";
 
 @Component({
   selector: 'app-item-list-dialog',
   standalone: true,
-    imports: [
-        MatDialogClose
-    ],
+  imports: [
+    MatDialogClose,
+    DialogLoadingComponent
+  ],
   templateUrl: './item-list-dialog.component.html'
 })
 export class ItemListDialogComponent implements OnInit {

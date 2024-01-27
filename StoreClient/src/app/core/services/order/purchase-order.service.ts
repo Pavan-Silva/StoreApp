@@ -25,12 +25,12 @@ export class PurchaseOrderService {
     return this.http.get<purchaseOrder[]>(API_URL, {params:{supplier:query}});
   }
 
-  saveOrder(item:item) {
-    return this.http.post<purchaseOrder>(API_URL, item);
+  saveOrder(order:purchaseOrder) {
+    return this.http.post<purchaseOrder>(API_URL, order);
   }
 
-  updateOrder(item:item) {
-    return this.http.put<purchaseOrder>(API_URL, item);
+  updateOrder(order:purchaseOrder) {
+    return this.http.put<purchaseOrder>(API_URL, order);
   }
 
   deleteById(id:number) {
