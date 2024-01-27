@@ -1,27 +1,27 @@
 import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import {user} from "../../core/models/user.model";
-import {UserFormDialogComponent} from "../../features/users/user-form-dialog/user-form-dialog.component";
+import {UserFormComponent} from "../../features/users/user-form/user-form.component";
 import {
-  EmployeeFormDialogComponent
-} from "../../features/employees/employee-form-dialog/employee-form-dialog.component";
+  EmployeeFormComponent
+} from "../../features/employees/employee-form/employee-form.component";
 import {AuthorizationService} from "../../core/services/auth/authorization.service";
 import {MatDialog} from "@angular/material/dialog";
-import {ItemFormDialogComponent} from "../../features/items/item-form-dialog/item-form-dialog.component";
+import {ItemFormComponent} from "../../features/items/item-form/item-form.component";
 import {
-  SupplierFormDialogComponent
-} from "../../features/suppliers/supplier-form-dialog/supplier-form-dialog.component";
+  SupplierFormComponent
+} from "../../features/suppliers/supplier-form/supplier-form.component";
 import {FormsModule} from "@angular/forms";
 import {Router} from "@angular/router";
 import {
-  PurchaseOrderFormDialogComponent
-} from "../../features/purchase-order/purchase-order-form-dialog/purchase-order-form-dialog.component";
+  PurchaseOrderFormComponent
+} from "../../features/purchase-order/purchase-order-form/purchase-order-form.component";
 
 @Component({
   selector: 'app-toolbar',
   standalone: true,
   imports: [
-    UserFormDialogComponent,
-    EmployeeFormDialogComponent,
+    UserFormComponent,
+    EmployeeFormComponent,
     FormsModule
   ],
   templateUrl: './toolbar.component.html'
@@ -58,35 +58,35 @@ export class ToolbarComponent implements OnInit, OnChanges {
 
   openFormDialog() {
     if (this.currentModule === 'Employees') {
-      this.dialog.open(EmployeeFormDialogComponent)
+      this.dialog.open(EmployeeFormComponent)
         .afterClosed().subscribe((refresh:boolean) => {
           if (refresh) this.navigateToMainPage();
       });
     }
 
     else if (this.currentModule === 'Users') {
-      this.dialog.open(UserFormDialogComponent)
+      this.dialog.open(UserFormComponent)
         .afterClosed().subscribe((refresh:boolean) => {
         if (refresh) this.navigateToMainPage();
       });
     }
 
     else if (this.currentModule === 'Items') {
-      this.dialog.open(ItemFormDialogComponent)
+      this.dialog.open(ItemFormComponent)
         .afterClosed().subscribe((refresh:boolean) => {
         if (refresh) this.navigateToMainPage();
       });
     }
 
     else if (this.currentModule === 'Suppliers') {
-      this.dialog.open(SupplierFormDialogComponent)
+      this.dialog.open(SupplierFormComponent)
         .afterClosed().subscribe((refresh:boolean) => {
         if (refresh) this.navigateToMainPage();
       });
     }
 
     else if (this.currentModule === 'Orders') {
-      this.dialog.open(PurchaseOrderFormDialogComponent)
+      this.dialog.open(PurchaseOrderFormComponent)
         .afterClosed().subscribe((refresh:boolean) => {
         if (refresh) this.navigateToMainPage();
       });

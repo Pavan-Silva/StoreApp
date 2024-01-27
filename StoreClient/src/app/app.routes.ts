@@ -3,17 +3,18 @@ import {MainWindowComponent} from "./shared/main-window/main-window.component";
 import {LoginPageComponent} from "./pages/login-page/login-page.component";
 import {authenticationGuard} from "./core/interceptors/authentication.guard";
 import {authorizationGuard} from "./core/interceptors/authorization.guard";
-import {EmployeeTableComponent} from "./features/employees/employee-table/employee-table.component";
+import {EmployeeListComponent} from "./features/employees/employee-list/employee-list.component";
 import {DashboardComponent} from "./features/dashboard/dashboard.component";
-import {UserTableComponent} from "./features/users/user-table/user-table.component";
-import {ItemTableComponent} from "./features/items/item-table/item-table.component";
+import {UserListComponent} from "./features/users/user-list/user-list.component";
+import {ItemListComponent} from "./features/items/item-list/item-list.component";
 import {
-  PurchaseOrderTableComponent
-} from "./features/purchase-order/purchase-order-table/purchase-order-table.component";
-import {SupplierTableComponent} from "./features/suppliers/supplier-table/supplier-table.component";
+  PurchaseOrderListComponent
+} from "./features/purchase-order/purchase-order-list/purchase-order-list.component";
+import {SupplierListComponent} from "./features/suppliers/supplier-list/supplier-list.component";
+import {NotFoundPageComponent} from "./pages/not-found-page/not-found-page.component";
 
 export const routes: Routes = [
-  {path:'login', component:LoginPageComponent},
+  { path:'login', component:LoginPageComponent},
   { path: '', redirectTo:'dashboard', pathMatch:'full'},
   {
     path:'',
@@ -21,12 +22,13 @@ export const routes: Routes = [
     canActivate: [authenticationGuard],
     canActivateChild: [authorizationGuard],
     children: [
-      { path: 'orders', component:PurchaseOrderTableComponent},
-      { path: 'employees', component:EmployeeTableComponent },
+      { path: 'orders', component:PurchaseOrderListComponent},
+      { path: 'employees', component:EmployeeListComponent },
       { path: 'dashboard', component:DashboardComponent },
-      { path: 'users', component:UserTableComponent },
-      { path: 'items', component:ItemTableComponent },
-      { path: 'suppliers', component:SupplierTableComponent }
+      { path: 'users', component:UserListComponent },
+      { path: 'items', component:ItemListComponent },
+      { path: 'suppliers', component:SupplierListComponent }
     ]
   },
+  { path: '**', component:NotFoundPageComponent },
 ];

@@ -41,7 +41,7 @@ export class MainWindowComponent implements OnInit {
     else this.logOut();
 
     if (this.authorizationService.hasRole('ADMIN')) this.isAdminUser = true;
-    if (this.authorizationService.hasRole('MANAGER')) this.isAdminUser = true;
+    if (this.authorizationService.hasRole('MANAGER')) this.isManager = true;
     this.setModuleByPath();
   }
 

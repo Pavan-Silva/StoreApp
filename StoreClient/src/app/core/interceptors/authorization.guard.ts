@@ -11,7 +11,7 @@ export const authorizationGuard: CanActivateChildFn = (route) => {
       return inject(AuthorizationService).hasRole('ADMIN');
     }
 
-    else if (path.includes('employees') || path.includes('orders') || path.includes('suppliers')) {
+    else if (path.includes('employees')) {
       return inject(AuthorizationService).hasRole('MANAGER');
     }
 
