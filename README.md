@@ -14,5 +14,6 @@ Developed client-app using,
  Developed server-app using,
  - Spring Boot 3(Java 17)
  - Spring Security(Jwt Auth)
+ - MapStruct(DTO)
  - MySQL
  - Swagger-Ui(OpenApi v3)
